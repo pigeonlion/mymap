@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>카카오맵 장소 검색 서비스</title>
+    <title>카카오맵 이모지 검색 서비스</title>
     <style>
         /* CSS: 화면 분할 레이아웃 */
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; font-family: 'Malgun Gothic', sans-serif; }
@@ -31,11 +31,32 @@
         #results-list .place-name { display: block; font-weight: bold; color: #333; margin-bottom: 5px; }
         #results-list .place-address { font-size: 12px; color: #888; }
 
-        /* 오른쪽 지도 */
+        /* 오른쪽 지도 영역 */
         #map-area { flex: 1; }
 
-        /* 인포윈도우 커스텀 스타일 */
-        .info-window { padding: 10px; font-size: 13px; line-height: 1.5; }
+        /* 이모지 마커 스타일 */
+        .emoji-marker {
+            font-size: 30px;
+            cursor: pointer;
+            transform: translate(-50%, -50%); /* 중심점 맞추기 */
+        }
+
+        /* 커스텀 인포윈도우 스타일 */
+        .custom-popup {
+            position: absolute;
+            bottom: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            padding: 10px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            font-size: 12px;
+            text-align: center;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
@@ -43,7 +64,7 @@
 <div class="main-container">
     <div id="side-bar">
         <div class="search-area">
-            <input type="text" id="keyword-input" placeholder="예: 강남역 카페, 맛집" onkeypress="if(event.keyCode==13) searchQuery()">
+            <input type="text" id="keyword-input" placeholder="예: 카페, 돈까스, 편의점" onkeypress="if(event.keyCode==13) searchQuery()">
             <button onclick="searchQuery()">검색</button>
         </div>
         <ul id="results-list"></ul>
@@ -56,8 +77,8 @@
 <script>
     let map;
     let placeService;
-    let markers = [];
-    let infoWindow = new kakao.maps.InfoWindow({ zIndex: 1 }); // 정보창 객체
+    let overlays = []; // 이모지 마커(CustomOverlay)들을 저장할 배열
+    let currentInfoWindow = null; // 현재 열려있는 인포윈도우
 
     window.onload = function() {
         initMap();
@@ -74,63 +95,64 @@
         map = new kakao.maps.Map(container, options);
         placeService = new kakao.maps.services.Places();
 
-        // 현재 위치 가져오기
+        // 내 위치 가져오기
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-                const currentPos = new kakao.maps.LatLng(lat, lng);
-
+                const currentPos = new kakao.maps.LatLng(position.coords.latitude, position.coords.longitude);
                 map.setCenter(currentPos);
-                displayCurrentMarker(currentPos);
+                addEmojiMarker(currentPos, "📍", { place_name: "내 위치", address_name: "현재 있는 곳" });
             });
         }
     }
 
-    // 2. 키워드 검색 실행
+    // 2. 키워드 검색
     function searchQuery() {
         const keyword = document.getElementById('keyword-input').value;
 
         if (!keyword.trim()) {
-            alert("검색어를 입력해주세요!");
+            alert("장소를 입력해주세요!");
             return;
         }
 
-        // 키워드로 장소 검색 (내 주변 위주로 검색하고 싶다면 location 옵션을 추가할 수 있음)
+        // 주변 검색 수행
         placeService.keywordSearch(keyword, function(data, status) {
             if (status === kakao.maps.services.Status.OK) {
-                displayResults(data);
-            } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-                alert("검색 결과가 없습니다.");
+                displayResults(data, keyword);
             } else {
-                alert("오류가 발생했습니다.");
+                alert("결과가 없거나 오류가 발생했습니다.");
             }
         });
     }
 
-    // 3. 결과 리스트 및 마커 표시
-    function displayResults(places) {
+    // 3. 검색 결과 표시
+    function displayResults(places, keyword) {
         const listEl = document.getElementById('results-list');
         const bounds = new kakao.maps.LatLngBounds();
         
-        clearMarkers();
+        clearOverlays();
         listEl.innerHTML = "";
 
-        places.forEach((place, index) => {
+        // 검색어에 따른 이모지 선택 (기본값은 🚩)
+        let emoji = "🚩";
+        if (keyword.includes("카페")) emoji = "☕";
+        else if (keyword.includes("맛집") || keyword.includes("식당")) emoji = "🍴";
+        else if (keyword.includes("돈까스")) emoji = "🐷";
+        else if (keyword.includes("편의점")) emoji = "🏪";
+
+        places.forEach((place) => {
             const position = new kakao.maps.LatLng(place.y, place.x);
             
-            // 리스트 아이템 생성
+            // 리스트 생성
             const li = document.createElement('li');
             li.innerHTML = `<span class="place-name">${place.place_name}</span>
                             <span class="place-address">${place.address_name}</span>`;
             
-            // 마커 생성 및 이벤트 바인딩
-            const marker = addMarker(position, place);
+            // 이모지 마커 추가
+            const overlay = addEmojiMarker(position, emoji, place);
 
-            // 리스트 클릭 이벤트
             li.onclick = () => {
                 map.panTo(position);
-                showInfoWindow(marker, place);
+                showPopup(position, place);
             };
 
             listEl.appendChild(li);
@@ -140,50 +162,52 @@
         map.setBounds(bounds);
     }
 
-    // 4. 마커 생성 및 클릭 이벤트 추가
-    function addMarker(position, place) {
-        const marker = new kakao.maps.Marker({
-            map: map,
-            position: position
-        });
-
-        // 마커 클릭 시 정보창 표시
-        kakao.maps.event.addListener(marker, 'click', function() {
-            showInfoWindow(marker, place);
-        });
-
-        markers.push(marker);
-        return marker;
-    }
-
-    // 5. 인포윈도우(팝업) 표시 함수
-    function showInfoWindow(marker, place) {
-        const content = `
-            <div class="info-window">
-                <strong>${place.place_name}</strong><br>
-                <small>${place.address_name}</small><br>
-                <a href="${place.place_url}" target="_blank" style="color:blue; font-size:11px;">상세보기</a>
-            </div>`;
+    // 4. 이모지 마커(CustomOverlay) 생성 함수
+    function addEmojiMarker(position, emoji, place) {
+        const content = document.createElement('div');
+        content.className = 'emoji-marker';
+        content.innerHTML = emoji;
         
-        infoWindow.setContent(content);
-        infoWindow.open(map, marker);
-    }
+        // 이모지 클릭 시 팝업 표시
+        content.onclick = function() {
+            showPopup(position, place);
+        };
 
-    // 현재 위치 표시용 특수 마커
-    function displayCurrentMarker(position) {
-        const marker = new kakao.maps.Marker({
-            map: map,
-            position: position
+        const customOverlay = new kakao.maps.CustomOverlay({
+            position: position,
+            content: content
         });
-        // 현재 위치라는 것을 알리기 위해 팝업을 바로 띄움
-        infoWindow.setContent('<div style="padding:5px;">현재 내 위치</div>');
-        infoWindow.open(map, marker);
+
+        customOverlay.setMap(map);
+        overlays.push(customOverlay);
+        return customOverlay;
     }
 
-    function clearMarkers() {
-        markers.forEach(m => m.setMap(null));
-        markers = [];
-        infoWindow.close();
+    // 5. 마커 클릭 시 나타날 팝업(InfoWindow) 함수
+    function showPopup(position, place) {
+        if (currentInfoWindow) currentInfoWindow.close();
+
+        const content = `
+            <div style="padding:10px; min-width:150px;">
+                <div style="font-weight:bold; margin-bottom:5px;">${place.place_name}</div>
+                <div style="font-size:11px; color:#666;">${place.address_name}</div>
+                <a href="${place.place_url}" target="_blank" style="display:inline-block; margin-top:5px; color:#007bff; font-size:11px; text-decoration:none;">상세보기</a>
+            </div>`;
+
+        currentInfoWindow = new kakao.maps.InfoWindow({
+            position: position,
+            content: content,
+            removable: true
+        });
+
+        currentInfoWindow.open(map);
+    }
+
+    // 기존 데이터 초기화
+    function clearOverlays() {
+        overlays.forEach(o => o.setMap(null));
+        overlays = [];
+        if (currentInfoWindow) currentInfoWindow.close();
     }
 </script>
 
