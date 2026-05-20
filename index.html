@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>예뻐지기 - 미용실 & 네일아트 검색</title>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5e13afa6a99113c09e16202e98f86d49&libraries=services"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=5e13afa6a99113c09e16202e98f86d49&libraries=services"></script>
     <style>
         /* 기본 스타일 초기화 */
         * {
@@ -20,6 +20,7 @@
             font-family: 'Malgun Gothic', dotum, sans-serif;
         }
 
+        /* 2분할 레이아웃 컨테이너 */
         .container {
             display: flex;
             width: 100%;
@@ -40,13 +41,13 @@
         /* 타이틀 구역 (빛나는 노란색 필기체) */
         .title-box {
             background-color: #333;
-            padding: 20px 15px 10px 15px;
+            padding: 15px;
             text-align: center;
         }
         
         .title-box h1 {
             font-family: 'Nanum Pen Script', cursive;
-            font-size: 42px;
+            font-size: 40px;
             color: #fee500;
             text-shadow: 0 0 10px #fee500, 0 0 20px #ffcc00;
             letter-spacing: 2px;
@@ -55,7 +56,7 @@
         /* 검색창 구역 (연노랑색 배경) */
         .search-box {
             padding: 15px;
-            background-color: #fffde7; /* 연노랑색 */
+            background-color: #fffde7; 
             border-bottom: 1px solid #e0e0e0;
         }
 
@@ -75,7 +76,7 @@
         /* 검색 버튼 (주황색) */
         .search-box button {
             padding: 8px 15px;
-            background-color: #ff9800; /* 주황색 */
+            background-color: #ff9800; 
             color: white;
             border: none;
             border-radius: 4px;
@@ -151,33 +152,33 @@
             height: 100%;
         }
 
-        /* --- 카카오맵 커스텀 오버레이 CSS 스타일 정의 --- */
-        /* 이모지 마커 스타일 */
+        /* --- 카카오맵 커스텀 오버레이 CSS --- */
+        /* 위아래로 둥둥 뜨는 이모지 마커 효과 */
         .emoji-marker {
-            font-size: 28px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            font-size: 30px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
             cursor: pointer;
-            animation: bounce 0.5s ease-in-out infinite alternate;
+            animation: bounce 0.6s ease-in-out infinite alternate;
         }
         @keyframes bounce {
             from { transform: translateY(0); }
-            to { transform: translateY(-5px); }
+            to { transform: translateY(-6px); }
         }
 
-        /* 분홍색 구름모양 말풍선 스타일 */
+        /* 분홍색 구름모양 말풍선 */
         .cloud-overlay {
             position: relative;
-            bottom: 55px;
-            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-            background: #ffb7c5; /* 분홍색 구름 배경 */
+            bottom: 60px;
+            border-radius: 30px;
+            background: #ffb7c5; 
             padding: 15px 20px;
             text-align: center;
             color: #333;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
             white-space: nowrap;
             border: 2px solid #fff;
         }
-        /* 구름의 몽실몽실한 효과를 위한 가상 요소 추가 */
+        /* 구름의 몽실몽실한 곡선 질감 구현 */
         .cloud-overlay:before, .cloud-overlay:after {
             content: '';
             position: absolute;
@@ -185,22 +186,22 @@
             border-radius: 50%;
             z-index: -1;
         }
-        .cloud-overlay:before { width: 40px; height: 40px; top: -15px; left: 15px; }
-        .cloud-overlay:after { width: 30px; height: 30px; top: -10px; right: 15px; }
+        .cloud-overlay:before { width: 35px; height: 35px; top: -12px; left: 15px; }
+        .cloud-overlay:after { width: 28px; height: 28px; top: -8px; right: 15px; }
 
-        .cloud-overlay h5 { margin: 0 0 4px 0; font-size: 14px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
-        .cloud-overlay p { margin: 0 0 6px 0; font-size: 11px; color: #555; }
-        .cloud-overlay a { font-size: 11px; color: #7b1fa2; font-weight: bold; text-decoration: none; background: #fff; padding: 2px 6px; border-radius: 10px; }
+        .cloud-overlay h5 { margin: 0 0 5px 0; font-size: 14px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .cloud-overlay p { margin: 0 0 8px 0; font-size: 11px; color: #444; }
+        .cloud-overlay a { font-size: 11px; color: #7b1fa2; font-weight: bold; text-decoration: none; background: #fff; padding: 3px 8px; border-radius: 12px; }
         
-        /* 닫기 버튼 */
+        /* 말풍선 닫기(X) 버튼 */
         .cloud-overlay .close-btn {
             position: absolute;
             top: 2px;
-            right: 10px;
+            right: 8px;
             color: #fff;
             cursor: pointer;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -214,7 +215,7 @@
             
             <div class="search-box">
                 <form onsubmit="searchPlaces(); return false;">
-                    <input type="text" id="keyword" value="강남역" placeholder="지역이나 지하철역을 입력하세요">
+                    <input type="text" id="keyword" value="강남역" placeholder="지역이나 역 이름을 입력하세요">
                     <button type="submit">검색</button>
                 </form>
             </div>
@@ -231,32 +232,34 @@
     </div>
 
     <script>
-        // 전역 변수 선언
+        // 전역 변수 초기화
         let map;
         let placeSearchService;
-        let currentCategory = 'hair'; // 기본 카테고리는 미용실
-        let customOverlays = [];      // 커스텀 마커와 말풍선들을 저장할 배열
-        let activeInfoWindow = null;  // 현재 열려있는 구름 말풍선 객체
+        let currentCategory = 'hair'; 
+        let customOverlays = [];      
+        let activeInfoWindow = null;  
 
-        // 지도 라이브러리 로딩 보장
+        // API 내부 엔진 로드가 완전히 끝난 뒤 초기화 함수 호출
         kakao.maps.load(function() {
             initMap();
         });
 
-        // 지도 초기화
+        // 지도 인스턴스 초기 구성 함수
         function initMap() {
             const mapContainer = document.getElementById('map');
+            
+            // 기본값: 서울시청 중심축 설정
             let defaultPosition = new kakao.maps.LatLng(37.566826, 126.9786567); 
             
             const mapOptions = {
                 center: defaultPosition,
-                level: 5
+                level: 5 // 확대 레벨 5 설정
             };
 
             map = new kakao.maps.Map(mapContainer, mapOptions);
             placeSearchService = new kakao.maps.services.Places();
 
-            // Geolocation으로 현재 위치 설정
+            // 사용자의 현위치 트래킹
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     const lat = position.coords.latitude;
@@ -265,8 +268,12 @@
                     
                     map.setCenter(currentPosition);
                     
-                    // 내 위치를 하늘색 꽃 이모지(🪻 또는 🩵) 커스텀 오버레이로 표시
-                    const myLocationContent = '<div class="emoji-marker" style="font-size:32px;">🩵</div>';
+                    // 내 위치 마커를 하늘색 꽃 이모지(🩵 또는 🪻 대신 호환성 높은 이모지 조합)로 커스텀 오버레이 처리
+                    const myLocationContent = document.createElement('div');
+                    myLocationContent.style.fontSize = '32px';
+                    myLocationContent.style.cursor = 'default';
+                    myLocationContent.innerText = '🩵'; // 하늘색 하트/꽃 모양 대용
+
                     const myLocationOverlay = new kakao.maps.CustomOverlay({
                         position: currentPosition,
                         content: myLocationContent,
@@ -274,23 +281,23 @@
                     });
                     myLocationOverlay.setMap(map);
                     
-                    // 첫 로드 시 현재 내 위치 주변을 자동 검색
+                    // 권한 획득 성공 시 즉시 주변 인프라 탐색 실행
                     searchPlaces();
 
                 }, function(error) {
-                    console.error("위치 정보를 가져오지 못했습니다.", error);
-                    searchPlaces(); // 실패해도 기본 좌표 기준으로 검색 실행
+                    // 권한 거부 등의 에러 발생 시에도 기본 좌표계 기준 검색으로 우회 처리
+                    console.warn("위치 정보를 허용하지 않아 기본 위치로 검색합니다.", error);
+                    searchPlaces();
                 });
             } else {
                 searchPlaces();
             }
         }
 
-        // 탭 전환 함수
+        // 탭 제어 스위치 함수
         function switchTab(category) {
             currentCategory = category;
             
-            // 탭 스타일 활성화 처리
             document.getElementById('tabHair').classList.remove('active');
             document.getElementById('tabNail').classList.remove('active');
             
@@ -300,121 +307,121 @@
                 document.getElementById('tabNail').classList.add('active');
             }
 
-            // 기존 마커 및 말풍선 완전히 지우고 새로 검색
+            // 기존 지도 오버레이 초기화 렌더링 후 재검색
             clearOverlays();
             searchPlaces();
         }
 
-        // 검색 실행 함수
+        // 키워드 서치 핸들러
         function searchPlaces() {
-            const baseKeyword = document.getElementById('keyword').value;
+            const searchInput = document.getElementById('keyword').value;
             
-            if (!baseKeyword.trim()) {
-                alert('위치를 입력해주세요! (예: 강남역, 홍대 등)');
+            if (!searchInput.trim()) {
+                alert('검색할 지역명을 입력해 주세요!');
                 return false;
             }
 
-            // 선택된 탭에 맞는 타겟 키워드 조합 (예: 강남역 미용실 / 강남역 네일아트)
-            const serviceKeyword = currentCategory === 'hair' ? '미용실' : '네일아트';
-            const finalQuery = `${baseKeyword} ${serviceKeyword}`;
+            // 카테고리 맵핑 텍스트 빌드
+            const serviceType = currentCategory === 'hair' ? '미용실' : '네일아트';
+            const finalQueryStr = `${searchInput} ${serviceType}`;
 
-            // 지도의 중심점 근처로 검색 결과 요청
-            placeSearchService.keywordSearch(finalQuery, placesSearchCallback, {
+            // 맵 중심축 스코프 기준 주변부 탐색 설계
+            placeSearchService.keywordSearch(finalQueryStr, placesSearchCallback, {
                 location: map.getCenter(),
-                radius: 2000 // 중심점 기준 2km 반경 우선 검색
+                radius: 3000 // 3km 반경 제한 스코프
             });
         }
 
-        // 검색 완료 콜백
+        // 키워드 서치 콜백 엔진
         function placesSearchCallback(data, status, pagination) {
             if (status === kakao.maps.services.Status.OK) {
                 displayPlaces(data);
             } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-                document.getElementById('placesList').innerHTML = '<div style="padding:20px; text-align:center; color:#999;">검색 결과가 없습니다.</div>';
+                document.getElementById('placesList').innerHTML = '<div style="padding:30px; text-align:center; color:#888; font-size: 14px;">주변에 매장이 없습니다.</div>';
                 clearOverlays();
             } else {
-                alert('검색 중 오류가 발생했습니다.');
+                alert('인터넷 연결을 확인하거나 API 서치 도중 오류가 발생했습니다.');
             }
         }
 
-        // 장소 표시 및 리스트 바인딩 함수
+        // 데이터 화면 렌더링 및 엘리먼트 바인딩 구조화
         function displayPlaces(places) {
-            const listEl = document.getElementById('placesList');
-            const bounds = new kakao.maps.LatLngBounds();
+            const listContainer = document.getElementById('placesList');
+            const mapBounds = new kakao.maps.LatLngBounds();
             
             clearOverlays();
-            listEl.innerHTML = '';
+            listContainer.innerHTML = '';
 
-            // 카테고리별 이모지 지정 (hair: 가위, nail: 손톱)
-            const emoji = currentCategory === 'hair' ? '✂️' : '💅';
+            // 카테고리 식별 이모지 설정
+            const targetEmoji = currentCategory === 'hair' ? '✂️' : '💅';
 
             for (let i = 0; i < places.length; i++) {
-                const placePosition = new kakao.maps.LatLng(places[i].y, places[i].x);
-                bounds.extend(placePosition);
+                const targetPosition = new kakao.maps.LatLng(places[i].y, places[i].x);
+                mapBounds.extend(targetPosition);
 
-                // 1. 이모지 마커용 커스텀 오버레이 생성
-                const markerContent = document.createElement('div');
-                markerContent.className = 'emoji-marker';
-                markerContent.innerText = emoji;
+                // 1. 커스텀 노드 이모지 아이콘 마커 디자인
+                const customMarkerNode = document.createElement('div');
+                customMarkerNode.className = 'emoji-marker';
+                customMarkerNode.innerText = targetEmoji;
 
-                const markerOverlay = new kakao.maps.CustomOverlay({
-                    position: placePosition,
-                    content: markerContent,
+                const markerOverlayInstance = new kakao.maps.CustomOverlay({
+                    position: targetPosition,
+                    content: customMarkerNode,
                     yAnchor: 1
                 });
-                markerOverlay.setMap(map);
-                customOverlays.push(markerOverlay); // 관리 배열에 추가
+                markerOverlayInstance.setMap(map);
+                customOverlays.push(markerOverlayInstance);
 
-                // 2. 장소 클릭 시 나타날 분홍색 구름 모양 말풍선 오버레이 생성
-                const cloudContent = document.createElement('div');
-                cloudContent.className = 'cloud-overlay';
-                cloudContent.innerHTML = `
+                // 2. 분홍색 구름 말풍선 컴포넌트 동적 빌드
+                const cloudPopupNode = document.createElement('div');
+                cloudPopupNode.className = 'cloud-overlay';
+                cloudPopupNode.innerHTML = `
                     <span class="close-btn" onclick="closeOverlay()">×</span>
                     <h5>${places[i].place_name}</h5>
-                    <p>${places[i].phone ? places[i].phone : '전화번호 없음'}</p>
-                    <a href="https://map.kakao.com/link/map/${places[i].id}" target="_blank">카카오맵 바로가기</a>
+                    <p>${places[i].phone ? places[i].phone : '번호 제공 없음'}</p>
+                    <a href="https://map.kakao.com/link/map/${places[i].id}" target="_blank">카카오맵 이동</a>
                 `;
 
-                const infoOverlay = new kakao.maps.CustomOverlay({
-                    position: placePosition,
-                    content: cloudContent,
+                const cloudOverlayInstance = new kakao.maps.CustomOverlay({
+                    position: targetPosition,
+                    content: cloudPopupNode,
                     yAnchor: 1
                 });
 
-                // 마커 이모지를 클릭하면 구름 말풍선 띄우기
-                markerContent.onclick = function() {
-                    if (activeInfoWindow) activeInfoWindow.setMap(null); // 기존에 열려있던 말풍선 닫기
-                    infoOverlay.setMap(map);
-                    activeInfoWindow = infoOverlay;
-                    map.panTo(placePosition);
+                // 마커 인터랙션 액션 바인딩
+                customMarkerNode.onclick = function() {
+                    if (activeInfoWindow) activeInfoWindow.setMap(null);
+                    cloudOverlayInstance.setMap(map);
+                    activeInfoWindow = cloudOverlayInstance;
+                    map.panTo(targetPosition);
                 };
 
-                // 3. 왼쪽 사이드바 리스트 아이템 동적 생성
-                const itemEl = document.createElement('div');
-                itemEl.className = 'result-item';
-                itemEl.innerHTML = `
-                    <h5>${emoji} ${places[i].place_name}</h5>
+                // 3. 사이드 리스트 아이템 UI 바인딩
+                const listItemNode = document.createElement('div');
+                listItemNode.className = 'result-item';
+                listItemNode.innerHTML = `
+                    <h5>${targetEmoji} ${places[i].place_name}</h5>
                     <p>${places[i].road_address_name ? places[i].road_address_name : places[i].address_name}</p>
-                    <p style="color:#ff9800; font-size:11px; margin-top:3px;">${places[i].phone}</p>
+                    <p style="color:#ff9800; font-size:11px; margin-top:4px; font-weight:bold;">${places[i].phone}</p>
                 `;
 
-                // 리스트 아이템 클릭 시 지도 이동 및 말풍선 켜기
-                itemEl.onclick = function() {
+                // 리스트 클릭 이벤트 핸들러
+                listItemNode.onclick = function() {
                     if (activeInfoWindow) activeInfoWindow.setMap(null);
-                    infoOverlay.setMap(map);
-                    activeInfoWindow = infoOverlay;
-                    map.setCenter(placePosition);
-                    map.setLevel(3); // 상세히 보도록 확대
+                    cloudOverlayInstance.setMap(map);
+                    activeInfoWindow = cloudOverlayInstance;
+                    map.setCenter(targetPosition);
+                    map.setLevel(3); // 포커싱 줌 인
                 };
 
-                listEl.appendChild(itemEl);
+                listContainer.appendChild(listItemNode);
             }
 
-            // 검색된 장소들을 한눈에 볼 수 있도록 지도 영역 재조정
-            map.setBounds(bounds);
+            // 서치 바운더리에 맞게 카메라 프레임 조정
+            map.setBounds(mapBounds);
         }
 
-        // 현재 켜져있는 구름 말풍선을 닫는 함수
+        // 말풍선 오프 스위치
         function closeOverlay() {
             if (activeInfoWindow) {
                 activeInfoWindow.setMap(null);
@@ -422,7 +429,7 @@
             }
         }
 
-        // 기존에 지도 위에 그려진 모든 커스텀 오버레이를 삭제하는 함수
+        // 기존 메모리 적재 오버레이 가비지 컬렉션 함수
         function clearOverlays() {
             closeOverlay();
             for (let i = 0; i < customOverlays.length; i++) {
