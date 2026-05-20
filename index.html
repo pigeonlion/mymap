@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>예뻐지기 - 미용실 & 네일아트 검색</title>
+    <title>예뻐지고 싶지도 - 미용실 & 네일아트 검색</title>
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=5e13afa6a99113c09e16202e98f86d49&libraries=services"></script>
     <style>
@@ -33,31 +33,30 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            border-right: 1px solid #ccc;
-            background-color: #f9f9f9;
+            border-right: 1px solid #ffccd5;
+            background-color: #fffafb;
             z-index: 10;
         }
 
-        /* 타이틀 구역 (빛나는 노란색 필기체) */
+        /* [요구사항 1, 3] 타이틀 구역 (분홍색 배경 + 바뀐 이름) */
         .title-box {
-            background-color: #333;
-            padding: 15px;
+            background-color: #ffb7c5; /* 진한 분홍 */
+            padding: 25px 15px 10px 15px;
             text-align: center;
         }
         
         .title-box h1 {
             font-family: 'Nanum Pen Script', cursive;
-            font-size: 40px;
-            color: #fee500;
-            text-shadow: 0 0 10px #fee500, 0 0 20px #ffcc00;
-            letter-spacing: 2px;
+            font-size: 48px;
+            color: #fff; /* 분홍 배경에 흰색 글씨로 더 깔끔하게 */
+            text-shadow: 2px 2px 4px rgba(255, 100, 130, 0.5);
+            letter-spacing: 1px;
         }
 
-        /* 검색창 구역 (연노랑색 배경) */
+        /* [요구사항 2] 검색창 구역 (연한 분홍색 배경) */
         .search-box {
-            padding: 15px;
-            background-color: #fffde7; 
-            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 15px 15px 15px;
+            background-color: #fff0f3; /* 연한 분홍 */
         }
 
         .search-box form {
@@ -67,51 +66,61 @@
 
         .search-box input {
             flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #ffd54f;
-            border-radius: 4px;
+            padding: 8px 15px;
+            border: 1px solid #ffccd5;
+            border-radius: 20px;
             font-size: 14px;
+            background-color: #fff;
+            outline: none;
         }
 
-        /* 검색 버튼 (주황색) */
+        /* 검색 버튼 (핑크색 유지) */
         .search-box button {
-            padding: 8px 15px;
-            background-color: #ff9800; 
+            padding: 8px 18px;
+            background-color: #ff748c; 
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
             font-size: 14px;
+            transition: all 0.2s;
         }
 
         .search-box button:hover {
-            background-color: #f57c00;
+            background-color: #ff5271;
+            transform: scale(1.05);
         }
 
-        /* 카테고리 탭 구역 */
+        /* 카테고리 탭 구역 (연한 분홍색 배경 유지) */
         .tab-container {
             display: flex;
-            background-color: #eee;
-            border-bottom: 1px solid #ccc;
+            gap: 10px;
+            padding: 10px 15px;
+            background-color: #fff0f3; /* 연한 분홍 */
+            border-bottom: 1px solid #ffccd5;
         }
 
         .tab-button {
             flex: 1;
-            padding: 12px;
+            padding: 6px 10px;
             text-align: center;
-            background-color: #f5f5f5;
-            border: none;
+            background-color: #fff;
+            border: 2px solid #fff;
+            border-radius: 25px;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.3s;
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 24px;
+            color: #aaa;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            transition: all 0.2s;
         }
 
         .tab-button.active {
-            background-color: #fff;
-            color: #ff9800;
-            border-bottom: 3px solid #ff9800;
+            color: #ff748c;
+            font-weight: bold;
+            border-color: #ff748c;
+            box-shadow: 0 3px 6px rgba(255, 116, 140, 0.2);
         }
 
         /* 결과 리스트 구역 */
@@ -124,26 +133,26 @@
         .result-item {
             padding: 15px;
             background-color: #fff;
-            border: 1px solid #eee;
-            border-radius: 4px;
+            border: 1px solid #fce4e9;
+            border-radius: 12px;
             margin-bottom: 10px;
             cursor: pointer;
             transition: background 0.2s;
         }
 
         .result-item:hover {
-            background-color: #fff8e1;
+            background-color: #fff0f3;
         }
 
         .result-item h5 {
-            font-size: 16px;
+            font-size: 15px;
             margin-bottom: 5px;
             color: #333;
         }
 
         .result-item p {
-            font-size: 13px;
-            color: #666;
+            font-size: 12px;
+            color: #777;
         }
 
         /* 오른쪽 지도 영역 */
@@ -153,32 +162,39 @@
         }
 
         /* --- 카카오맵 커스텀 오버레이 CSS --- */
-        /* 위아래로 둥둥 뜨는 이모지 마커 효과 */
         .emoji-marker {
-            font-size: 30px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
             cursor: pointer;
+            text-align: center;
+        }
+
+        /* 매장 마커: 둥둥 뜨는 애니메이션 */
+        .shop-marker {
+            font-size: 22px; 
             animation: bounce 0.6s ease-in-out infinite alternate;
         }
         @keyframes bounce {
             from { transform: translateY(0); }
-            to { transform: translateY(-6px); }
+            to { transform: translateY(-5px); }
+        }
+
+        /* 검색 중심지(꽃) 및 내 위치(하트) 마커 크기 */
+        .center-flower-marker, .my-location-marker {
+            font-size: 24px; 
         }
 
         /* 분홍색 구름모양 말풍선 */
         .cloud-overlay {
             position: relative;
-            bottom: 60px;
+            bottom: 50px;
             border-radius: 30px;
             background: #ffb7c5; 
-            padding: 15px 20px;
+            padding: 12px 18px;
             text-align: center;
             color: #333;
-            box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
             white-space: nowrap;
             border: 2px solid #fff;
         }
-        /* 구름의 몽실몽실한 곡선 질감 구현 */
         .cloud-overlay:before, .cloud-overlay:after {
             content: '';
             position: absolute;
@@ -186,14 +202,13 @@
             border-radius: 50%;
             z-index: -1;
         }
-        .cloud-overlay:before { width: 35px; height: 35px; top: -12px; left: 15px; }
-        .cloud-overlay:after { width: 28px; height: 28px; top: -8px; right: 15px; }
+        .cloud-overlay:before { width: 32px; height: 32px; top: -10px; left: 12px; }
+        .cloud-overlay:after { width: 26px; height: 26px; top: -6px; right: 12px; }
 
-        .cloud-overlay h5 { margin: 0 0 5px 0; font-size: 14px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
-        .cloud-overlay p { margin: 0 0 8px 0; font-size: 11px; color: #444; }
-        .cloud-overlay a { font-size: 11px; color: #7b1fa2; font-weight: bold; text-decoration: none; background: #fff; padding: 3px 8px; border-radius: 12px; }
+        .cloud-overlay h5 { margin: 0 0 4px 0; font-size: 13px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .cloud-overlay p { margin: 0 0 6px 0; font-size: 11px; color: #444; }
+        .cloud-overlay a { font-size: 11px; color: #7b1fa2; font-weight: bold; text-decoration: none; background: #fff; padding: 2px 7px; border-radius: 12px; }
         
-        /* 말풍선 닫기(X) 버튼 */
         .cloud-overlay .close-btn {
             position: absolute;
             top: 2px;
@@ -201,7 +216,7 @@
             color: #fff;
             cursor: pointer;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
         }
     </style>
 </head>
@@ -210,12 +225,12 @@
     <div class="container">
         <div class="sidebar">
             <div class="title-box">
-                <h1>예뻐지기</h1>
+                <h1>예뻐지고 싶지도</h1>
             </div>
             
             <div class="search-box">
                 <form onsubmit="searchPlaces(); return false;">
-                    <input type="text" id="keyword" value="강남역" placeholder="지역이나 역 이름을 입력하세요">
+                    <input type="text" id="keyword" value="강남역" placeholder="원하는 장소를 입력하세요!">
                     <button type="submit">검색</button>
                 </form>
             </div>
@@ -232,34 +247,32 @@
     </div>
 
     <script>
-        // 전역 변수 초기화
+        // 전역 변수 관리
         let map;
         let placeSearchService;
         let currentCategory = 'hair'; 
-        let customOverlays = [];      
+        let shopOverlays = [];         
+        let searchCenterOverlay = null; 
         let activeInfoWindow = null;  
 
-        // API 내부 엔진 로드가 완전히 끝난 뒤 초기화 함수 호출
+        // API 엔진 로드 후 실행
         kakao.maps.load(function() {
             initMap();
         });
 
-        // 지도 인스턴스 초기 구성 함수
+        // 지도 초기화 및 현위치 마킹
         function initMap() {
             const mapContainer = document.getElementById('map');
-            
-            // 기본값: 서울시청 중심축 설정
             let defaultPosition = new kakao.maps.LatLng(37.566826, 126.9786567); 
             
             const mapOptions = {
                 center: defaultPosition,
-                level: 5 // 확대 레벨 5 설정
+                level: 5 
             };
 
             map = new kakao.maps.Map(mapContainer, mapOptions);
             placeSearchService = new kakao.maps.services.Places();
 
-            // 사용자의 현위치 트래킹
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     const lat = position.coords.latitude;
@@ -268,11 +281,10 @@
                     
                     map.setCenter(currentPosition);
                     
-                    // 내 위치 마커를 하늘색 꽃 이모지(🩵 또는 🪻 대신 호환성 높은 이모지 조합)로 커스텀 오버레이 처리
+                    // 현위치: 하늘색 하트 (작은 사이즈)
                     const myLocationContent = document.createElement('div');
-                    myLocationContent.style.fontSize = '32px';
-                    myLocationContent.style.cursor = 'default';
-                    myLocationContent.innerText = '🩵'; // 하늘색 하트/꽃 모양 대용
+                    myLocationContent.className = 'emoji-marker my-location-marker';
+                    myLocationContent.innerText = '🩵';
 
                     const myLocationOverlay = new kakao.maps.CustomOverlay({
                         position: currentPosition,
@@ -281,12 +293,10 @@
                     });
                     myLocationOverlay.setMap(map);
                     
-                    // 권한 획득 성공 시 즉시 주변 인프라 탐색 실행
-                    searchPlaces();
+                    searchPlaces(); 
 
                 }, function(error) {
-                    // 권한 거부 등의 에러 발생 시에도 기본 좌표계 기준 검색으로 우회 처리
-                    console.warn("위치 정보를 허용하지 않아 기본 위치로 검색합니다.", error);
+                    console.warn("기본 위치 기반으로 검색을 시작합니다.", error);
                     searchPlaces();
                 });
             } else {
@@ -294,7 +304,7 @@
             }
         }
 
-        // 탭 제어 스위치 함수
+        // 탭 전환 처리
         function switchTab(category) {
             currentCategory = category;
             
@@ -307,79 +317,100 @@
                 document.getElementById('tabNail').classList.add('active');
             }
 
-            // 기존 지도 오버레이 초기화 렌더링 후 재검색
-            clearOverlays();
+            clearShopOverlays();
             searchPlaces();
         }
 
-        // 키워드 서치 핸들러
+        // 키워드 장소 검색 실행
         function searchPlaces() {
             const searchInput = document.getElementById('keyword').value;
             
             if (!searchInput.trim()) {
-                alert('검색할 지역명을 입력해 주세요!');
+                alert('검색할 장소를 입력해 주세요!');
                 return false;
             }
 
-            // 카테고리 맵핑 텍스트 빌드
             const serviceType = currentCategory === 'hair' ? '미용실' : '네일아트';
             const finalQueryStr = `${searchInput} ${serviceType}`;
 
-            // 맵 중심축 스코프 기준 주변부 탐색 설계
             placeSearchService.keywordSearch(finalQueryStr, placesSearchCallback, {
                 location: map.getCenter(),
-                radius: 3000 // 3km 반경 제한 스코프
+                radius: 3000 
             });
         }
 
-        // 키워드 서치 콜백 엔진
+        // 검색 결과 콜백
         function placesSearchCallback(data, status, pagination) {
             if (status === kakao.maps.services.Status.OK) {
                 displayPlaces(data);
             } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-                document.getElementById('placesList').innerHTML = '<div style="padding:30px; text-align:center; color:#888; font-size: 14px;">주변에 매장이 없습니다.</div>';
-                clearOverlays();
+                document.getElementById('placesList').innerHTML = '<div style="padding:30px; text-align:center; color:#888; font-size: 14px;">매장을 찾지 못했어요. 😢</div>';
+                clearShopOverlays();
             } else {
-                alert('인터넷 연결을 확인하거나 API 서치 도중 오류가 발생했습니다.');
+                alert('검색 중 오류가 발생했습니다.');
             }
         }
 
-        // 데이터 화면 렌더링 및 엘리먼트 바인딩 구조화
+        // 지도 및 리스트 데이터 렌더링
         function displayPlaces(places) {
             const listContainer = document.getElementById('placesList');
             const mapBounds = new kakao.maps.LatLngBounds();
             
-            clearOverlays();
+            clearShopOverlays();
             listContainer.innerHTML = '';
 
-            // 카테고리 식별 이모지 설정
+            // 검색 중심지: 노란색 꽃 (🌼)
+            if (places.length > 0) {
+                if (searchCenterOverlay) searchCenterOverlay.setMap(null);
+
+                let sumLat = 0, sumLng = 0;
+                for(let k=0; k<places.length; k++) {
+                    sumLat += parseFloat(places[k].y);
+                    sumLng += parseFloat(places[k].x);
+                }
+                const centerLat = sumLat / places.length;
+                const centerLng = sumLng / places.length;
+                const searchedCenterPosition = new kakao.maps.LatLng(centerLat, centerLng);
+
+                const centerFlowerNode = document.createElement('div');
+                centerFlowerNode.className = 'emoji-marker center-flower-marker'; 
+                centerFlowerNode.innerText = '🌼';
+
+                searchCenterOverlay = new kakao.maps.CustomOverlay({
+                    position: searchedCenterPosition,
+                    content: centerFlowerNode,
+                    yAnchor: 0.85
+                });
+                searchCenterOverlay.setMap(map);
+            }
+
             const targetEmoji = currentCategory === 'hair' ? '✂️' : '💅';
 
             for (let i = 0; i < places.length; i++) {
                 const targetPosition = new kakao.maps.LatLng(places[i].y, places[i].x);
                 mapBounds.extend(targetPosition);
 
-                // 1. 커스텀 노드 이모지 아이콘 마커 디자인
-                const customMarkerNode = document.createElement('div');
-                customMarkerNode.className = 'emoji-marker';
-                customMarkerNode.innerText = targetEmoji;
+                // 1. 매장 이모지 마커 (작은 크기)
+                const shopMarkerNode = document.createElement('div');
+                shopMarkerNode.className = 'emoji-marker shop-marker';
+                shopMarkerNode.innerText = targetEmoji;
 
                 const markerOverlayInstance = new kakao.maps.CustomOverlay({
                     position: targetPosition,
-                    content: customMarkerNode,
+                    content: shopMarkerNode,
                     yAnchor: 1
                 });
                 markerOverlayInstance.setMap(map);
-                customOverlays.push(markerOverlayInstance);
+                shopOverlays.push(markerOverlayInstance);
 
-                // 2. 분홍색 구름 말풍선 컴포넌트 동적 빌드
+                // 2. 구름 말풍선 생성
                 const cloudPopupNode = document.createElement('div');
                 cloudPopupNode.className = 'cloud-overlay';
                 cloudPopupNode.innerHTML = `
                     <span class="close-btn" onclick="closeOverlay()">×</span>
                     <h5>${places[i].place_name}</h5>
-                    <p>${places[i].phone ? places[i].phone : '번호 제공 없음'}</p>
-                    <a href="https://map.kakao.com/link/map/${places[i].id}" target="_blank">카카오맵 이동</a>
+                    <p>${places[i].phone ? places[i].phone : '번호 정보 없음'}</p>
+                    <a href="https://map.kakao.com/link/map/${places[i].id}" target="_blank">카카오맵 연결</a>
                 `;
 
                 const cloudOverlayInstance = new kakao.maps.CustomOverlay({
@@ -388,40 +419,38 @@
                     yAnchor: 1
                 });
 
-                // 마커 인터랙션 액션 바인딩
-                customMarkerNode.onclick = function() {
+                // 마커 클릭 시 정보창 노출
+                shopMarkerNode.onclick = function() {
                     if (activeInfoWindow) activeInfoWindow.setMap(null);
                     cloudOverlayInstance.setMap(map);
                     activeInfoWindow = cloudOverlayInstance;
                     map.panTo(targetPosition);
                 };
 
-                // 3. 사이드 리스트 아이템 UI 바인딩
+                // 3. 리스트 아이템 UI 바인딩
                 const listItemNode = document.createElement('div');
                 listItemNode.className = 'result-item';
                 listItemNode.innerHTML = `
                     <h5>${targetEmoji} ${places[i].place_name}</h5>
                     <p>${places[i].road_address_name ? places[i].road_address_name : places[i].address_name}</p>
-                    <p style="color:#ff9800; font-size:11px; margin-top:4px; font-weight:bold;">${places[i].phone}</p>
+                    <p style="color:#ff748c; font-size:11px; margin-top:4px; font-weight:bold;">${places[i].phone}</p>
                 `;
 
-                // 리스트 클릭 이벤트 핸들러
                 listItemNode.onclick = function() {
                     if (activeInfoWindow) activeInfoWindow.setMap(null);
                     cloudOverlayInstance.setMap(map);
                     activeInfoWindow = cloudOverlayInstance;
                     map.setCenter(targetPosition);
-                    map.setLevel(3); // 포커싱 줌 인
+                    map.setLevel(3); 
                 };
 
                 listContainer.appendChild(listItemNode);
             }
 
-            // 서치 바운더리에 맞게 카메라 프레임 조정
             map.setBounds(mapBounds);
         }
 
-        // 말풍선 오프 스위치
+        // 정보창 닫기
         function closeOverlay() {
             if (activeInfoWindow) {
                 activeInfoWindow.setMap(null);
@@ -429,13 +458,13 @@
             }
         }
 
-        // 기존 메모리 적재 오버레이 가비지 컬렉션 함수
-        function clearOverlays() {
+        // 메모리 정리용 오버레이 삭제
+        function clearShopOverlays() {
             closeOverlay();
-            for (let i = 0; i < customOverlays.length; i++) {
-                customOverlays[i].setMap(null);
+            for (let i = 0; i < shopOverlays.length; i++) {
+                shopOverlays[i].setMap(null);
             }
-            customOverlays = [];
+            shopOverlays = [];
         }
     </script>
 </body>
